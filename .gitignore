@@ -1,0 +1,39 @@
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# runtime artifacts (never commit)
+logs/
+sessions/
+acceptance/
+monitor_shots/
+*.pkl
+
+# per-app runtime state (stale markers)
+harnesses/*/state.json
+
+# scheduler config (contains your own automation plans)
+schedules.json
+
+# icon atlases: declared per-game knowledge — contribute to the community repo
+templates/*
+!templates/README.md
+
+# knowledge packs: same policy — engine + format doc ship, packs are community/private
+knowledge/*
+!knowledge/README.md
+
+# open-core split: private plugins & research stay local
+private_plugins/
+
+# editors / os
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+.github/workflows/

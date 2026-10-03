@@ -1,0 +1,32 @@
+{
+  package: "com.android.settings",
+  name: "Android Settings（内置最小示例：任何设备可跑）",
+  versionRange: "*",
+  trust: "trusted", // 手工编写、只读级动作（launch + 设置内搜索），经验收
+  notes: "基座仓自带的hand-written 最小示例，演示 harness 结构而非覆盖各厂商设置界面。OEM 设置页（MIUI/HyperOS/ColorOS 等）控件差异大：search 的 desc 已给 AOSP 与中文两个变体，仍不命中就以本文件为模板自己蒸馏。社区贡献的 app 包见 awesome-mobile-agent-harness 仓库。",
+  tools: [
+    {
+      name: "launch",
+      description: "打开设置并等待其稳定到前台",
+      params: {},
+      steps: [
+        { action: "launch", pkg: "com.android.settings", desc: "拉起设置" },
+        { action: "assert", target: "current_app(com.android.settings)", desc: "前台确为设置" }
+      ],
+      postconditions: ["current_app(com.android.settings)"]
+    },
+    {
+      name: "search",
+      description: "点搜索入口并输入关键词（AOSP: Search settings；OEM 中文变体走 target_alt）",
+      params: { query: "string" },
+      steps: [
+        { action: "click", target: "desc@^Search settings$ && pkg@com.android.settings",
+          target_alt: "desc@^搜索设置$ && pkg@com.android.settings",
+          desc: "点搜索入口", then_wait: { selector: "class@android.widget.EditText && pkg@com.android.settings", timeout: 6 } },
+        { action: "set_text", target: "class@android.widget.EditText && pkg@com.android.settings",
+          value: "$query", desc: "输入搜索词" }
+      ],
+      postconditions: ["exists(class@android.widget.EditText && pkg@com.android.settings)"]
+    }
+  ]
+}

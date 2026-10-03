@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mobile-agent-harness"
+version = "0.5.0"
+description = "Give any AI agent component-level control of an Android phone: MCP server + CLI + hot-reloadable plugin runtime over a self-healing uiautomator2 bridge."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "mobile-agent-harness contributors" }]
+requires-python = ">=3.9"
+keywords = ["mcp", "android", "agent", "uiautomator2", "automation", "harness", "plugin"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "uiautomator2>=3.0",
+    "Pillow>=9.0",
+    "requests>=2.25",
+    "json5>=0.9",
+]
+
+[project.optional-dependencies]
+ocr = ["rapidocr-onnxruntime>=1.3", "numpy"]
+scene = ["torch>=2.0", "transformers>=4.40", "pillow>=9.0"]
+
+[project.scripts]
+mah-cli = "core.cli:main"
+mah-mcp = "core.mcp_server:serve"
+mah-scheduler = "core.scheduler:main"
+
+[project.urls]
+Homepage = "https://github.com/Aelindra/mobile-agent-harness"
+
+[tool.setuptools]
+packages = ["core", "core.providers"]
