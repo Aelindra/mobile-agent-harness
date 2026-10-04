@@ -10,7 +10,10 @@
 ```
 knowledge/<pack>/
   pack.json5     # 必需：{name, version, game?, guide?, atlas?, states?}
-  business.md    # 可选：设备无关的业务语义（实体/规则/流程图/词表）
+  business.md    # 可选：设备无关的业务语义（实体/规则/流程图/词表）。
+               #        优先聚合既有知识源（官方教程/社区 wiki/攻略）而非自行摸索；
+               #        头部维护来源清单（链接 + 最后核对日期），矛盾与不确定处显式标注。
+               #        适用筛选：变动率低、敏感度低、有社区知识源、高频复用
   guide.md       # 可选：业务流程/使用时机/注意事项（上下文面）
   templates/     # 可选：图集（与 templates/ 同构：<game>/manifest.json + *.png）
   variants/      # 可选：设备变体（variants/<device>/templates|states），
