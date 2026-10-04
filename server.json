@@ -10,6 +10,7 @@
   "remotes": [],
   "repository": {
     "url": "https://github.com/Aelindra/mobile-agent-harness",
-    "source": "https://github.com/Aelindra/mobile-agent-harness"
+    "source": "github",
+    "id": "1403397824"
   }
 }
