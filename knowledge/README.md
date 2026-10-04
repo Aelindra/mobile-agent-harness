@@ -10,8 +10,11 @@
 ```
 knowledge/<pack>/
   pack.json5     # 必需：{name, version, game?, guide?, atlas?, states?}
+  business.md    # 可选：设备无关的业务语义（实体/规则/流程图/词表）
   guide.md       # 可选：业务流程/使用时机/注意事项（上下文面）
   templates/     # 可选：图集（与 templates/ 同构：<game>/manifest.json + *.png）
+  variants/      # 可选：设备变体（variants/<device>/templates|states），
+                 #        同一 app 在手机/PC 等形态各一份映射
 ```
 
 `pack.json5` 示例（完整可运行样例见 `_demo_pack/`，`_` 前缀不参与自动加载，
