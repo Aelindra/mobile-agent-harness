@@ -86,6 +86,8 @@ A harness file declares per-app flows as selector steps with pre/postconditions;
 
 Plugins drop into `plugins/` and register tools or capability providers at load time; registrations are reversible and hot-reloaded on file change. See the Plugin development guide in [README.zh-CN.md](README.zh-CN.md) and `knowledge/README.md` for the knowledge-pack format.
 
+For business context on apps where model priors are unreliable, point agents at [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs) — a community catalog of structural app surveys in the open Agent Skills format, split per feature module for complex apps. Mobile scenarios in particular are private-domain and underrepresented in training data, so agents benefit from loading the relevant survey before operating an unfamiliar app. The local `knowledge/` directory remains this repo's runtime layer (packs, icon templates, state discriminators).
+
 ## Configuration
 
 | Variable | Description | Example |

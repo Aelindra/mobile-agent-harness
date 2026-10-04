@@ -88,6 +88,10 @@ harness 文件按"选择器步骤 + 前/后置条件"声明某 app 的操作流�
 
 ## 配置
 
+对模型先验不可靠的长尾应用，建议让 agent 加载 [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs) 作为业务上下文——社区维护的应用结构综述目录，采用开放的 Agent Skills 格式，复杂应用按功能模块拆分。移动场景偏私域、在训练数据中覆盖稀薄，操作不熟悉应用前加载对应综述收益明显。本仓的 `knowledge/` 目录仍是运行时层（知识包、图标模板、状态判别式）。
+
+## 配置
+
 | 变量 | 说明 | 示例 |
 |---|---|---|
 | `AGENT_SERIAL_DEFAULT` | 无 `--serial`/`ANDROID_SERIAL` 时使用的设备 serial | `192.168.1.23:5555` |
