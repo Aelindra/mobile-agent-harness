@@ -1,5 +1,5 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Aelindra/mobile-agent-harness",
   "display_name": "Mobile Agent Harness",
   "description": "Android device automation for AI agents: MCP server, CLI, and plugin runtime over adb.",
@@ -9,6 +9,7 @@
   },
   "remotes": [],
   "repository": {
+    "url": "https://github.com/Aelindra/mobile-agent-harness",
     "source": "https://github.com/Aelindra/mobile-agent-harness"
   }
 }
