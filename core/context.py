@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-"""L0 上下文探针：一次调用收集确定性旁证（不经过模型判读）。
+"""上下文探针：一次调用收集前台应用与设备的确定性旁证。
 
-包名/组件/版本等信号不解释业务，但能塌缩应用层假设空间——场景路由
-不依赖模型自评（校准在长尾失效），依赖这类外部确定性信号。
+信号不经模型判读，用于在业务判读前确定应用层事实。
 """
 from __future__ import annotations
 
@@ -77,9 +76,8 @@ def match_packs(packs: dict, pkg: str) -> list:
 def register(ctx: Context):
     @ctx.register_tool(
         "app.probe",
-        "L0 上下文探针：一次收集确定性旁证（前台包名/Activity/版本/安装更新时间/"
-        "亮灭屏/屏幕方向）。这些信号不经过模型判读、不会骗人——判读或规划前先调它，"
-        "可塌缩应用层假设空间",
+        "上下文探针：一次收集确定性旁证（前台包名/Activity/版本/安装更新时间/"
+        "亮灭屏/屏幕方向）。判读或规划前先调它确定应用层事实",
         {"type": "object"})
     def app_probe(br, eng, a):
         return probe_context(br)

@@ -5,19 +5,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/) (informally);
 
 ## 0.6.0 - 2026-10-04
 
-Scenario routing ladder: deterministic context probes and mechanical knowledge
-evaluation replace model self-assessment for judging "what is on screen".
-
 ### Added
 
-- `app.probe` / `core/context.py` — L0 context probe: one call returns cheap
-  deterministic side signals (foreground package/activity, version, install/update
-  dates, screen state, orientation). Package names don't lie; these signals
-  collapse the app-level hypothesis space without model judgment.
-- `ui2.timeline` + `frame_evidence` / `collect_timeline` — L2 frame timeline:
-  N frames of lightweight evidence (overlay/motion/brightness) in time order.
-  Transient and intermediate states are ambiguous in a single frame; their
-  temporal shape resolves the ambiguity.
+- `app.probe` / `core/context.py` — context probe returning deterministic side
+  signals in one call: foreground package/activity, app version, install/update
+  dates, screen state, display orientation.
+- `ui2.timeline` + `frame_evidence` / `collect_timeline` — frame timeline:
+  N frames of lightweight evidence (overlay/motion/brightness) in time order,
+  resolving transient states that are ambiguous in a single frame.
 - Sequence discriminators (`seq`) in knowledge-pack states: a list of evidence
   expressions matched against timeline frames in strict order — partial break
   counts as evidence-backed failure, missing timeline counts as insufficient
