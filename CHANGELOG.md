@@ -3,6 +3,34 @@
 All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) (informally); versioning is SemVer-ish.
 
+## 0.6.0 - 2026-10-04
+
+Scenario routing ladder: deterministic context probes and mechanical knowledge
+evaluation replace model self-assessment for judging "what is on screen".
+
+### Added
+
+- `app.probe` / `core/context.py` — L0 context probe: one call returns cheap
+  deterministic side signals (foreground package/activity, version, install/update
+  dates, screen state, orientation). Package names don't lie; these signals
+  collapse the app-level hypothesis space without model judgment.
+- `ui2.timeline` + `frame_evidence` / `collect_timeline` — L2 frame timeline:
+  N frames of lightweight evidence (overlay/motion/brightness) in time order.
+  Transient and intermediate states are ambiguous in a single frame; their
+  temporal shape resolves the ambiguity.
+- Sequence discriminators (`seq`) in knowledge-pack states: a list of evidence
+  expressions matched against timeline frames in strict order — partial break
+  counts as evidence-backed failure, missing timeline counts as insufficient
+  evidence.
+- `hypotheses` enumeration exit: when no state fully matches, `ui2.check_states`
+  and `ui2.orient` return ranked partial matches (score = hit ratio over all
+  discriminators, missing included in the denominator) with the missing evidence
+  listed — collect more instead of jumping to a conclusion.
+- `ui2.orient` — L0→L1 composite entry point: probe context, route to matching
+  knowledge packs by package name (`app`/`apps`/`game`/`pkgs` fields), evaluate
+  all states (auto-timeline when any `seq` is declared), return matched states
+  or ranked hypotheses plus a `next` hint. First call before judging or planning.
+
 ## 0.5.0 - 2026-10-03
 
 First public release.

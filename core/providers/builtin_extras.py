@@ -134,6 +134,10 @@ def register_extras(ctx: Context):
     from .. import knowledge
     knowledge.register(ctx)
 
+    # ---- app.probe：L0 上下文探针（确定性旁证，场景路由第一步）----
+    from .. import context as _context
+    _context.register(ctx)
+
     # ---- events.tail/wait：事件面（logcat 推送 + 帧差分）----
     from .. import eventbus
     eventbus.register(ctx)

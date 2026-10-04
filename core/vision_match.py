@@ -102,6 +102,55 @@ def find_in_image(screen_img, tmpl_img, threshold: float = 0.78,
     return out
 
 
+def frame_evidence(img, prev_img=None, t: float = 0.0) -> dict:
+    """单帧轻量证据（无 OCR/无模板）：overlay/motion/color——时间线原料。"""
+    import numpy as np
+    hsv = np.asarray(img.convert("HSV").resize((320, 180)))
+    H, S, V = hsv[:, :, 0].astype(int), hsv[:, :, 1].astype(int), hsv[:, :, 2].astype(int)
+    sat, val = float(S.mean()), float(V.mean())
+    ev = {"t": round(float(t), 2),
+          "overlay": "gray" if sat < 25 else "dimmed" if sat < 45 else "normal",
+          "brightness": round(val, 1)}
+    if prev_img is not None:
+        a1 = np.asarray(prev_img.convert("L").resize((320, 180)), dtype=int)
+        a2 = np.asarray(img.convert("L").resize((320, 180)), dtype=int)
+        m = float(np.abs(a1 - a2).mean())
+        ev["motion"] = m
+        ev["motion_label"] = "static" if m < 1.0 else "low" if m < 6 else "high"
+    Hdeg = H * 360 // 255
+    chroma = S >= 40
+    total = H.size
+    buckets = {"red": ((Hdeg < 15) | (Hdeg >= 345)) & chroma,
+               "orange": (Hdeg >= 15) & (Hdeg < 40) & chroma,
+               "yellow": (Hdeg >= 40) & (Hdeg < 65) & chroma,
+               "green": (Hdeg >= 65) & (Hdeg < 160) & chroma,
+               "blue": (Hdeg >= 195) & (Hdeg < 260) & chroma,
+               "purple": (Hdeg >= 260) & (Hdeg < 345) & chroma}
+    hue = {k: round(int(m.sum()) / total, 3) for k, m in buckets.items()}
+    hue["neutral"] = round(1.0 - sum(hue.values()), 3)
+    ev["color"] = {"hue_mass": hue}
+    return ev
+
+
+def collect_timeline(br, frames: int = 6, interval: float = 0.5) -> dict:
+    """帧时间线：N 帧轻量证据按时间排列——seq 判别式与运动形状的原料。"""
+    import time as _t
+    from . import frames as _frames
+    out, prev, t0 = [], None, _t.time()
+    for i in range(max(2, min(frames, 20))):
+        try:
+            img, _ = _frames.grab(br)
+        except Exception as ex:  # noqa: BLE001
+            return {"ok": False, "error": f"取帧失败: {type(ex).__name__}: {ex}"}
+        fe = frame_evidence(img, prev, t=_t.time() - t0)
+        fe.pop("color", None)          # 时间线只留序列相关字段，控体积
+        out.append(fe)
+        prev = img
+        if i < max(2, min(frames, 20)) - 1:
+            _t.sleep(max(0.05, interval))
+    return {"ok": True, "frames": out, "interval": interval}
+
+
 def collect_evidence(br, game: Optional[str] = None) -> dict:
     """屏幕证据采集（只出证据不下结论）。ui2.screen_evidence 与 ui2.check_states 共用。"""
     try:
@@ -262,6 +311,18 @@ def register(ctx: Context):
                 "cutscene(过场/播片)": "hud 缺席 且 motion=low 且 overlay=normal"}
             ev["rule"] = "只有判别式全部满足才能下结论；不满足时输出备选假设并继续采集证据"
         return ev
+
+    @ctx.register_tool(
+        "ui2.timeline",
+        "帧时间线（事实面时序证据）：N 帧轻量证据（overlay/motion/brightness）按时间排列。"
+        "瞬态/中间态在单帧里歧义（走位 vs 飞行 vs 过场），时序形状消解歧义；"
+        "也是知识包 seq 判别式的原料",
+        {"type": "object", "properties": {
+            "frames": {"type": "integer", "default": 6},
+            "interval": {"type": "number", "default": 0.5}}})
+    def ui2_timeline(br, eng, a):
+        return collect_timeline(br, frames=int(a.get("frames", 6)),
+                                interval=float(a.get("interval", 0.5)))
 
     @ctx.register_tool(
         "ui2.scene_match",

@@ -59,14 +59,14 @@ All tools return a `{"ok": bool, "error"?, ...}` envelope. `ok=false` is a busin
 
 | Group | Tools |
 |---|---|
-| Observation | `ui.snapshot` `ui.dump` `ui.find` `ui2.state` `ui2.screen_evidence` `ui2.find_templates` `vision.screenshot` `vision.ocr` `vision.diff` |
+| Observation | `ui.snapshot` `ui.dump` `ui.find` `ui2.state` `ui2.screen_evidence` `ui2.timeline` `ui2.find_templates` `vision.screenshot` `vision.ocr` `vision.diff` |
 | Action | `ui.click` `ui.click_handle` `ui.text_handle` `ui.hold_read` `ui.set_text` `ui.scroll` `ui.back` `ui.home` `input.tap` `input.swipe` `input.key` |
-| App | `app.launch` `app.current` `app.list` `app.stop` `app.wait_idle` |
+| App | `app.launch` `app.current` `app.probe` `app.list` `app.stop` `app.wait_idle` |
 | Shell & data | `shell.run` `state.prefs` `state.db` `file.push` `file.pull` `net.http` |
 | Events | `events.tail` `events.wait` `events.capture` `events.record_start` `events.record_stop` |
-| Knowledge & tasks | `knowledge.list` `knowledge.guide` `ui2.check_states` `task.begin` `task.note` `task.end` `template.add` `sys.capabilities` |
+| Knowledge & tasks | `knowledge.list` `knowledge.guide` `ui2.check_states` `ui2.orient` `task.begin` `task.note` `task.end` `template.add` `sys.capabilities` |
 
-`ui.snapshot` returns a compact accessibility-tree listing with element handles (`e0`, `e1`, ...); `ui.click_handle` acts on a handle with drift detection. `ui2.state` fuses the accessibility tree with OCR for canvas-drawn UIs. `ui2.screen_evidence` collects measurable screen features (overlay level, motion, color, layout density) without interpreting them.
+`ui.snapshot` returns a compact accessibility-tree listing with element handles (`e0`, `e1`, ...); `ui.click_handle` acts on a handle with drift detection. `ui2.state` fuses the accessibility tree with OCR for canvas-drawn UIs. `ui2.screen_evidence` collects measurable screen features (overlay level, motion, color, layout density) without interpreting them. `app.probe` returns deterministic side signals (package, version, orientation); `ui2.timeline` captures N frames of lightweight evidence in time order; `ui2.orient` probes context, routes to matching knowledge packs, and evaluates their state discriminators — returning matched states or ranked hypotheses with the missing evidence listed.
 
 ## Selectors
 

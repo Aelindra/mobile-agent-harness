@@ -59,14 +59,14 @@ python -m core.cli call ui.click --args '{"selector":"text@^Network & internet$"
 
 | 分组 | 工具 |
 |---|---|
-| 观测 | `ui.snapshot` `ui.dump` `ui.find` `ui2.state` `ui2.screen_evidence` `ui2.find_templates` `vision.screenshot` `vision.ocr` `vision.diff` |
+| 观测 | `ui.snapshot` `ui.dump` `ui.find` `ui2.state` `ui2.screen_evidence` `ui2.timeline` `ui2.find_templates` `vision.screenshot` `vision.ocr` `vision.diff` |
 | 操作 | `ui.click` `ui.click_handle` `ui.text_handle` `ui.hold_read` `ui.set_text` `ui.scroll` `ui.back` `ui.home` `input.tap` `input.swipe` `input.key` |
-| 应用 | `app.launch` `app.current` `app.list` `app.stop` `app.wait_idle` |
+| 应用 | `app.launch` `app.current` `app.probe` `app.list` `app.stop` `app.wait_idle` |
 | Shell 与数据 | `shell.run` `state.prefs` `state.db` `file.push` `file.pull` `net.http` |
 | 事件 | `events.tail` `events.wait` `events.capture` `events.record_start` `events.record_stop` |
-| 知识与任务 | `knowledge.list` `knowledge.guide` `ui2.check_states` `task.begin` `task.note` `task.end` `template.add` `sys.capabilities` |
+| 知识与任务 | `knowledge.list` `knowledge.guide` `ui2.check_states` `ui2.orient` `task.begin` `task.note` `task.end` `template.add` `sys.capabilities` |
 
-`ui.snapshot` 输出带元素句柄（`e0`、`e1`…）的紧凑无障碍树快照；`ui.click_handle` 按句柄操作并带漂移检测。`ui2.state` 将无障碍树与 OCR 融合，覆盖 canvas 自绘界面。`ui2.screen_evidence` 采集可度量的屏幕特征（遮蔽程度、运动量、色彩、布局密度），只出证据不做判读。
+`ui.snapshot` 输出带元素句柄（`e0`、`e1`…）的紧凑无障碍树快照；`ui.click_handle` 按句柄操作并带漂移检测。`ui2.state` 将无障碍树与 OCR 融合，覆盖 canvas 自绘界面。`ui2.screen_evidence` 采集可度量的屏幕特征（遮蔽程度、运动量、色彩、布局密度），只出证据不做判读。`app.probe` 返回确定性旁证（包名/版本/方向）；`ui2.timeline` 按时间序采集 N 帧轻量证据；`ui2.orient` 探上下文、按包名路由知识包并求值状态判别式——返回全命中状态或带缺口清单的排序假设。
 
 ## 选择器
 

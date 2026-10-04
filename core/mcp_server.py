@@ -32,7 +32,7 @@ else:
     from .registry import Registry
 
 PROTOCOL_VERSION = "2024-11-05"
-SERVER_INFO = {"name": "mobile-agent-harness", "version": "0.5.0"}
+SERVER_INFO = {"name": "mobile-agent-harness", "version": "0.6.0"}
 
 INSTRUCTIONS = """整台安卓手机的组件级操控（uiautomator2 无障碍桥 + GKD 风格语义选择器 + harness 插件）。禁止裸坐标：所有定位用选择器。
 

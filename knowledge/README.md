@@ -9,7 +9,7 @@
 
 ```
 knowledge/<pack>/
-  pack.json5     # 必需：{name, version, game?, guide?, atlas?, states?}
+  pack.json5     # 必需：{name, version, app?, guide?, atlas?, states?}
   business.md    # 可选：设备无关的业务语义（实体/规则/流程图/词表）。
                #        优先聚合既有知识源（官方教程/社区 wiki/攻略）而非自行摸索；
                #        头部维护来源清单（链接 + 最后核对日期），矛盾与不确定处显式标注。
@@ -27,11 +27,15 @@ knowledge/<pack>/
 {
   name: "my-pack",
   version: "0.1",
-  game: "com.example.app",       // 可选：限定目标 app
+  app: "com.example.app",        // 包名：ui2.orient 按它把包路由到前台应用
   guide: "guide.md",             // 可选：上下文面
   atlas: "templates",            // 可选：运行时图集
-  states: {                      // 可选：状态判别式（全满足才 ok；缺证据单列）
-    grayed: { all: ["overlay=gray", "motion!=high", "hud=absent"] }
+  states: {                      // 可选：状态判别条目（可机械求值的最小判别单元）
+    grayed: { all: ["overlay=gray", "motion!=high", "hud=absent"] },
+    launched: {                  // seq=时序形状：表达式依序命中时间线各帧
+      seq: ["motion=high", "overlay=dimmed", "motion=low"],
+      desc: "启动过渡（闪屏→变暗→静止）"
+    }
   }
 }
 ```
@@ -42,6 +46,24 @@ knowledge/<pack>/
 与插件运行时同一套契约。规则：states 判别式只对 `ui2.screen_evidence` 的证据
 字段求值（overlay/motion/hud/color.*/filter.*），表达式形如 `key(=|!=|>|<)value`；
 `ok=true` 才是结论，`insufficient_evidence=true` 表示证据不足（继续采集，不是否定）。
+`all` 之外可声明 `seq`（表达式列表，依序命中 `ui2.timeline` 帧证据，帧序严格前进，
+部分中断=证据性失败）——单帧证据无法区分的瞬态/中间态时序形状由 seq 承载。
+
+### 判别条目写作纪律
+
+- 条目最值钱的是**判别性事实**：能把外观相近的状态区分开的机制描述；模型已有的
+  常识写进条目只加 token 不加准确度。
+- 条目的核心价值=**提供先验与搜索都生成不出的假设**：画面外上下文（模式/时段/
+  活动期/账号态）专属的机制才值得写。
+- **错误条目是负债**（agent 会被错条目带偏）：每条带 `desc`，来源与核对日期写进
+  business.md 头部。
+
+### ui2.orient（情境定向，判读/规划前的第一步）
+
+`ui2.orient` 组合两级阶梯：先 `app.probe`（包名/版本/方向等确定性旁证——包名
+不会骗人，直接塌缩应用层假设空间），再按包名路由到匹配知识包求值全部状态判别式
+（条目含 seq 时自动采时间线）。返回 `matched_states`（全命中结论）或 `hypotheses`
+（按证据命中率的排序候选+各自缺什么）——无全命中时按 hypotheses 补采集，不跳结论。
 
 知识包可独立发布（如 app-knowledge-packs 这类目录），也可存于本仓私有目录；本目录除本 README
 与 `_` 前缀样例外已 gitignore。

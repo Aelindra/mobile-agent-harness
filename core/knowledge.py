@@ -134,24 +134,81 @@ def _eval_expr(expr: str, flat: Dict[str, object]):
     return None, None
 
 
-def evaluate_states(ev: dict, states: dict) -> List[dict]:
-    """对一组状态声明求值。判别式纪律：全满足才 ok；缺证据≠不匹配（单列）。"""
+def _eval_seq(seq: List[str], frame_flats: List[Dict[str, object]]) -> dict:
+    """序列判别式：expr 依序命中时间线各帧（帧严格前进）。
+    部分命中=证据性失败（时间线已观察但序列不成立），非"缺证据"。"""
+    matched, details = 0, []
+    fi = 0
+    for expr in seq:
+        found = None
+        while fi < len(frame_flats):
+            hit, detail = _eval_expr(str(expr), frame_flats[fi])
+            if hit is True:
+                found = fi
+                fi += 1
+                break
+            fi += 1
+        if found is None:
+            return {"matched": matched, "total": len(seq),
+                    "ok": False,
+                    "detail": f"seq 在第 {matched + 1} 步中断: {expr}"}
+        matched += 1
+        details.append(f"[f{found}] {expr}")
+    return {"matched": matched, "total": len(seq), "ok": True, "detail": " -> ".join(details)}
+
+
+def evaluate_states(ev: dict, states: dict, timeline: Optional[List[dict]] = None) -> List[dict]:
+    """对一组状态声明求值。判别式纪律：全满足才 ok；缺证据≠不匹配（单列）。
+
+    timeline=帧证据列表（ui2.timeline 产物，各元素为单帧 evidence dict）。
+    状态可声明 seq（表达式列表，依序命中时间线）——单帧证据无法表达的
+    时序形状（进入结构→指示圈→弹出）由 seq 承载。
+    返回附 score=可测判别式的命中率，供无全命中时输出排序假设。"""
     flat = flatten_evidence(ev)
+    frame_flats = [flatten_evidence(t) for t in (timeline or [])]
     out = []
     for sname, spec in (states or {}).items():
-        missing, failed = [], []
+        missing, failed, okd = [], [], 0
         for expr in (spec.get("all") or []):
             hit, detail = _eval_expr(str(expr), flat)
             if hit is None:
                 missing.append({"expr": str(expr), "detail": "证据缺失"})
-            elif not hit:
+            elif hit:
+                okd += 1
+            else:
                 failed.append({"expr": str(expr), "actual": detail})
+        seq_detail = None
+        if spec.get("seq"):
+            if not frame_flats:
+                missing.append({"expr": f"seq({len(spec['seq'])}步)",
+                                "detail": "时间线证据缺失（传 timeline=true 重采）"})
+            else:
+                seq_detail = _eval_seq(spec["seq"], frame_flats)
+                if seq_detail["ok"]:
+                    okd += 1
+                else:
+                    failed.append({"expr": "seq", "actual": seq_detail["detail"]})
+        testable = okd + len(failed) + len(missing)
         out.append({"state": sname,
                     "ok": not missing and not failed,
                     "insufficient_evidence": bool(missing),
+                    "score": round(okd / testable, 2) if testable else 0.0,
                     "missing": missing, "failed": failed,
+                    "seq": seq_detail,
                     "desc": spec.get("desc", "")})
+    out.sort(key=lambda r: (-r["score"], r["state"]))
     return out
+
+
+def hypotheses(results: List[dict], top: int = 3) -> List[dict]:
+    """无全命中时的假设枚举出口：按 score 排序的部分匹配候选+缺什么证据。"""
+    cands = [r for r in results if not r["ok"] and r["score"] > 0]
+    cands.sort(key=lambda r: -r["score"])
+    return [{"state": r["state"],
+             "score": r["score"],
+             "missing": [m["expr"] for m in r["missing"]],
+             "failed": [f["expr"] for f in r["failed"]],
+             "desc": r.get("desc", "")} for r in cands[:top]]
 
 
 # ---------------- 工具面 ----------------
@@ -194,24 +251,85 @@ def register(ctx: Context):
 
     @ctx.register_tool(
         "ui2.check_states", "按知识包的状态判别式求值当前屏幕：先采证据（同 ui2.screen_evidence），"
-        "再对声明状态逐个判别式求值——全满足=ok，缺证据单列（不出具结论）。"
-        "这是'证据与判读分离'的声明面",
+        "再对声明状态逐个判别式求值——全满足=ok，缺证据单列，无全命中时给排序假设。"
+        "状态声明含 seq（时序形状）时需 timeline=true 先采帧时间线",
         {"type": "object", "properties": {
             "pack": {"type": "string", "description": "只求值该包；缺省求值全部已加载包"},
-            "game": {"type": "string"}}})
+            "game": {"type": "string"},
+            "timeline": {"type": "boolean", "default": False,
+                         "description": "true 时先采帧时间线（供 seq 判别式），多花约帧数*间隔"}}})
     def ui2_check_states(br, eng, a):
-        from .vision_match import collect_evidence
+        from .vision_match import collect_evidence, collect_timeline
         ev = collect_evidence(br, a.get("game"))
         if not ev.get("ok"):
             return ev
+        timeline = None
+        need_seq = any((p["meta"].get("states") or {}) and
+                       any(s.get("seq") for s in (p["meta"].get("states") or {}).values())
+                       for p in _PACKS.values())
+        if a.get("timeline") or need_seq:
+            timeline = collect_timeline(br, frames=int(a.get("frames", 6)),
+                                        interval=a.get("interval", 0.5))
+            if not timeline.get("ok"):
+                timeline = None
         targets = ([a["pack"]] if a.get("pack") else sorted(_PACKS))
         results = []
         for name in targets:
             p = _PACKS.get(name)
             if not p:
                 continue
-            for st in evaluate_states(ev, p["meta"].get("states") or {}):
+            for st in evaluate_states(ev, p["meta"].get("states") or {}, timeline):
                 results.append({"pack": name, **st})
+        full = [r for r in results if r["ok"]]
         return {"ok": True, "evidence": ev,
+                "timeline_frames": len(timeline) if timeline else 0,
                 "states": results,
-                "rule": "ok=true 才是结论；insufficient_evidence=true 的状态只是证据不足，继续采集"}
+                "matched": full,
+                "hypotheses": ([] if full else hypotheses(results)),
+                "rule": "ok=true 才是结论；无 ok 时 hypotheses 是按证据命中率的排序候选，"
+                        "继续补 missing 证据再判，不得跳到结论"}
+
+    @ctx.register_tool(
+        "ui2.orient", "情境定向（L0→L1 组合出口）：先探上下文旁证（app.probe：包名/版本/"
+        "方向等确定性信号，塌缩应用层假设），再按包名匹配已加载知识包并求值状态判别式"
+        "（含 seq 时自动采时间线）。无匹配包时返回 probe+提示。判读/规划前的第一步",
+        {"type": "object", "properties": {"game": {"type": "string"}}})
+    def ui2_orient(br, eng, a):
+        from .context import probe_context, match_packs
+        probe = probe_context(br)
+        pkg = probe.get("package")
+        matched = match_packs(_PACKS, pkg or "")
+        out: dict = {"ok": True, "probe": probe, "packs": matched}
+        if not matched:
+            out["next"] = ("无已加载知识包匹配该应用：判读走通用证据"
+                           "（ui2.screen_evidence/ui2.state），或为该应用建包"
+                           "（pack.json5 的 app 字段填包名）")
+            return out
+        from .vision_match import collect_evidence, collect_timeline
+        ev = collect_evidence(br, a.get("game"))
+        if not ev.get("ok"):
+            out["evidence_error"] = ev
+            return out
+        timeline = None
+        states_all = {}
+        results = []
+        for name in matched:
+            p = _PACKS[name]
+            st = p["meta"].get("states") or {}
+            states_all[name] = sorted(st.keys())
+            if any(s.get("seq") for s in st.values()) and timeline is None:
+                timeline = collect_timeline(br)
+                if not timeline.get("ok"):
+                    timeline = None
+            for r in evaluate_states(ev, st, timeline):
+                results.append({"pack": name, **r})
+        full = [r for r in results if r["ok"]]
+        out.update({"evidence": ev,
+                    "timeline_frames": len(timeline) if timeline else 0,
+                    "states": results, "matched_states": full,
+                    "hypotheses": ([] if full else hypotheses(results)),
+                    "guides": [n for n in matched if _PACKS[n]["meta"].get("guide")]})
+        out["next"] = (f"命中 {len(full)} 个状态；先 knowledge.guide 看业务流程再行动"
+                       if full else
+                       "无全命中：按 hypotheses 补采集（missing 列了缺什么），不要下结论")
+        return out

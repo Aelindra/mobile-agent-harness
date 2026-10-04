@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mobile-agent-harness"
-version = "0.5.0"
+version = "0.6.0"
 description = "Give any AI agent component-level control of an Android phone: MCP server + CLI + hot-reloadable plugin runtime over a self-healing uiautomator2 bridge."
 readme = "README.md"
 license = { file = "LICENSE" }
