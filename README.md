@@ -4,7 +4,7 @@
 
 > 中文文档：[README.zh-CN.md](README.zh-CN.md)
 
-This is the base runtime only. App-specific knowledge packs and plugins live in the community catalog: [awesome-mobile-agent-harness](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin).
+This is the base runtime only. Plugins live in the community catalog: [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin). App business knowledge for AI lives in [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs), which this repo's `knowledge/` loader reads directly.
 
 ## Install
 
@@ -108,7 +108,7 @@ Messaging, banking, and e-commerce apps run active anti-automation risk control;
 
 ## Contributing
 
-Offline tests: `python tests/test_runtime.py`. Device smoke: `python tests/smoke_mcp.py`. Knowledge packs and plugins are contributed to [awesome-mobile-agent-harness](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin) — see its contributing guide for formats and rules.
+Plugins are contributed to [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin); app business knowledge to [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs) — see their contributing guides.
 
 ## License
 
