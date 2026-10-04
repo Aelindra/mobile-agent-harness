@@ -1,0 +1,17 @@
+# Smithery configuration: https://smithery.ai/docs/config#smitheryyaml
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      serial:
+        type: string
+        description: Android device serial (defaults to AGENT_SERIAL_DEFAULT / emulator-5555)
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: "python",
+      args: ["-m", "core.cli", "mcp"],
+      cwd: ".",
+      env: config.serial ? { AGENT_SERIAL_DEFAULT: config.serial } : {}
+    })

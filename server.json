@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "com.Aelindra/mobile-agent-harness",
+  "display_name": "Mobile Agent Harness",
+  "description": "Android device automation for AI agents: MCP server + CLI + hot-reloadable plugin runtime over uiautomator2 (zero device-side install).",
+  "version": "0.5.0",
+  "publication": {
+    "status": "experimental"
+  },
+  "remotes": [],
+  "packages": [
+    {
+      "registry_type": "oci",
+      "identifier": "ghcr.io/Aelindra/mobile-agent-harness:latest",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "repository": {
+    "source": "https://github.com/Aelindra/mobile-agent-harness"
+  }
+}
