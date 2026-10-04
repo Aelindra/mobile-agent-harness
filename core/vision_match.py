@@ -4,7 +4,7 @@
 template.add 从截图裁剪图标并声明名称/用途；ui2.find_templates 在任意
 截图上返回图标位置与置信度。图集目录 <repo>/templates/<game>/，
 manifest.json：{"<模板名>": {"label": ..., "desc": ..., "kind": "hud|icon|item|..."}}。
-图集内容归社区目录收录，基座只带引擎（templates/ 除 README 外 gitignored）。
+图集内容可独立发布共享，基座只带引擎（templates/ 除 README 外 gitignored）。
 """
 from __future__ import annotations
 

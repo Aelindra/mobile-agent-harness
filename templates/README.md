@@ -6,5 +6,5 @@
 
 - 工作流：`vision.screenshot` → `template.add {game, name, label, desc, box}` → 永久可匹配
 - 目录结构：`<game>/manifest.json` + `<game>/<name>.png`
-- 游戏向图集属于社区知识：请贡献到 awesome-mobile-agent-harness 仓库；
+- 图集内容可在独立目录发布共享；
   本目录除本 README 外已 gitignore（各人自己积累）

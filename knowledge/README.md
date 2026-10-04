@@ -43,5 +43,5 @@ knowledge/<pack>/
 字段求值（overlay/motion/hud/color.*/filter.*），表达式形如 `key(=|!=|>|<)value`；
 `ok=true` 才是结论，`insufficient_evidence=true` 表示证据不足（继续采集，不是否定）。
 
-游戏向知识包归社区目录（awesome-mobile-agent-harness）收录；本目录除本 README
+知识包可独立发布（如 app-knowledge-packs 这类目录），也可存于本仓私有目录；本目录除本 README
 与 `_` 前缀样例外已 gitignore。

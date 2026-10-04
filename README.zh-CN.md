@@ -4,7 +4,7 @@
 
 > English documentation: [README.md](README.md)
 
-本仓只含基座运行时。app 相关的知识包与插件在社区目录：[awesome-mobile-agent-harness](https://github.com/Aelindra/awesome-mobile-agent-harness)。
+本仓只含基座运行时。app 相关的知识包与插件在社区目录：[awesome-mobile-agent-harness](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin)。
 
 ## 安装
 
@@ -108,7 +108,7 @@ harness 文件按"选择器步骤 + 前/后置条件"声明某 app 的操作流�
 
 ## Contributing
 
-离线测试：`python tests/test_runtime.py`。真机冒烟：`python tests/smoke_mcp.py`。知识包与插件贡献到 [awesome-mobile-agent-harness](https://github.com/Aelindra/awesome-mobile-agent-harness)，格式与规则见其贡献指南。
+离线测试：`python tests/test_runtime.py`。真机冒烟：`python tests/smoke_mcp.py`。知识包与插件贡献到 [awesome-mobile-agent-harness](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin)，格式与规则见其贡献指南。
 
 ## License
 
