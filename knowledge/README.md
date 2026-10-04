@@ -64,5 +64,5 @@ knowledge/<pack>/
 时自动采集时间线）。返回 `matched_states`（全命中）或 `hypotheses`（按证据
 命中率排序的候选及各自缺失的证据）——无全命中时按 hypotheses 补充采集。
 
-知识包可独立发布（如 app-knowledge-packs 这类目录），也可存于本仓私有目录；本目录除本 README
+知识包可独立发布（如 app-lore 这类目录），也可存于本仓私有目录；本目录除本 README
 与 `_` 前缀样例外已 gitignore。

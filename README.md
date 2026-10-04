@@ -4,7 +4,7 @@
 
 > 中文文档：[README.zh-CN.md](README.zh-CN.md)
 
-This is the base runtime only. Plugins live in the community catalog: [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin). App business knowledge for AI lives in [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs), which this repo's `knowledge/` loader reads directly.
+This is the base runtime only. Plugins live in the community catalog: [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin). App business knowledge for AI lives in [app-lore](https://github.com/Aelindra/app-lore), which this repo's `knowledge/` loader reads directly.
 
 ## Install
 
@@ -86,7 +86,7 @@ A harness file declares per-app flows as selector steps with pre/postconditions;
 
 Plugins drop into `plugins/` and register tools or capability providers at load time; registrations are reversible and hot-reloaded on file change. See the Plugin development guide in [README.zh-CN.md](README.zh-CN.md) and `knowledge/README.md` for the knowledge-pack format.
 
-For business context on apps where model priors are unreliable, point agents at [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs) — a community catalog of structural app surveys in the open Agent Skills format, split per feature module for complex apps. Mobile scenarios in particular are private-domain and underrepresented in training data, so agents benefit from loading the relevant survey before operating an unfamiliar app. The local `knowledge/` directory remains this repo's runtime layer (packs, icon templates, state discriminators).
+For business context on apps where model priors are unreliable, point agents at [app-lore](https://github.com/Aelindra/app-lore) — a community catalog of structural app surveys in the open Agent Skills format, split per feature module for complex apps. Mobile scenarios in particular are private-domain and underrepresented in training data, so agents benefit from loading the relevant survey before operating an unfamiliar app. The local `knowledge/` directory remains this repo's runtime layer (packs, icon templates, state discriminators).
 
 ## Configuration
 
@@ -110,7 +110,7 @@ Messaging, banking, and e-commerce apps run active anti-automation risk control;
 
 ## Contributing
 
-Plugins are contributed to [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin); app business knowledge to [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs) — see their contributing guides.
+Plugins are contributed to [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin); app business knowledge to [app-lore](https://github.com/Aelindra/app-lore) — see their contributing guides.
 
 ## License
 

@@ -4,7 +4,7 @@
 
 > English documentation: [README.md](README.md)
 
-本仓只含基座运行时。插件在社区目录：[awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin)；面向 AI 的 app 业务知识在 [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs)，本仓 `knowledge/` 加载器可直接读取该格式。
+本仓只含基座运行时。插件在社区目录：[awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin)；面向 AI 的 app 业务知识在 [app-lore](https://github.com/Aelindra/app-lore)，本仓 `knowledge/` 加载器可直接读取该格式。
 
 ## 安装
 
@@ -88,7 +88,7 @@ harness 文件按"选择器步骤 + 前/后置条件"声明某 app 的操作流�
 
 ## 配置
 
-对模型先验不可靠的长尾应用，建议让 agent 加载 [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs) 作为业务上下文——社区维护的应用结构综述目录，采用开放的 Agent Skills 格式，复杂应用按功能模块拆分。移动场景偏私域、在训练数据中覆盖稀薄，操作不熟悉应用前加载对应综述收益明显。本仓的 `knowledge/` 目录仍是运行时层（知识包、图标模板、状态判别式）。
+对模型先验不可靠的长尾应用，建议让 agent 加载 [app-lore](https://github.com/Aelindra/app-lore) 作为业务上下文——社区维护的应用结构综述目录，采用开放的 Agent Skills 格式，复杂应用按功能模块拆分。移动场景偏私域、在训练数据中覆盖稀薄，操作不熟悉应用前加载对应综述收益明显。本仓的 `knowledge/` 目录仍是运行时层（知识包、图标模板、状态判别式）。
 
 ## 配置
 
@@ -112,7 +112,7 @@ harness 文件按"选择器步骤 + 前/后置条件"声明某 app 的操作流�
 
 ## Contributing
 
-插件贡献到 [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin)；app 业务知识贡献到 [app-knowledge-packs](https://github.com/Aelindra/app-knowledge-packs)——格式与规则见各自贡献指南。
+插件贡献到 [awesome-mobile-agent-harness-plugin](https://github.com/Aelindra/awesome-mobile-agent-harness-plugin)；app 业务知识贡献到 [app-lore](https://github.com/Aelindra/app-lore)——格式与规则见各自贡献指南。
 
 ## License
 
